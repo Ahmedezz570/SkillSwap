@@ -11,11 +11,13 @@ import { useToast } from '@/hooks/use-toast';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
-    name: '',
+    fullName: '',
     email: '',
+    password: '',
     bio: '',
-    canTeach: '',
-    wantsToLearn: ''
+    skillsICanTeach: '',
+    skillsIWantToLearn: '',
+    role: 'user'
   });
   const { signup, isLoggedIn } = useApp();
   const { toast } = useToast();
@@ -24,20 +26,22 @@ const Signup = () => {
     return <Navigate to="/dashboard" replace />;
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const userData = {
       ...formData,
-      canTeach: formData.canTeach.split(',').map(skill => skill.trim()).filter(Boolean),
-      wantsToLearn: formData.wantsToLearn.split(',').map(skill => skill.trim()).filter(Boolean)
+      skillsICanTeach: formData.skillsICanTeach.split(',').map(skill => skill.trim()).filter(Boolean),
+      skillsIWantToLearn: formData.skillsIWantToLearn.split(',').map(skill => skill.trim()).filter(Boolean)
     };
+    console.log("userData",userData);
     
-    const success = signup(userData);
+    const success = await signup(userData);
     if (success) {
       toast({
         title: "Welcome to SkillSwap!",
         description: "Your account has been created successfully.",
       });
+      <Navigate to="/login" replace />;
     } else {
       toast({
         title: "Signup failed",
@@ -52,6 +56,7 @@ const Signup = () => {
       ...prev,
       [e.target.name]: e.target.value
     }));
+    console.log(formData)
   };
 
   return (
@@ -66,14 +71,16 @@ const Signup = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
+
+
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
+              <Label htmlFor="fullName">Full Name</Label>
               <Input
-                id="name"
-                name="name"
-                placeholder="John Doe"
-                value={formData.name}
+                id="fullName"
+                name="fullName"
+                placeholder="yourName"
+                value={formData.fullName}
                 onChange={handleChange}
                 required
               />
@@ -84,8 +91,20 @@ const Signup = () => {
                 id="email"
                 name="email"
                 type="email"
-                placeholder="john@example.com"
+                placeholder="yourEmail@gmail.com"
                 value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">password</Label>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="********"
+                value={formData.password}
                 onChange={handleChange}
                 required
               />
@@ -102,22 +121,22 @@ const Signup = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="canTeach">Skills I Can Teach</Label>
+              <Label htmlFor="skillsICanTeach">Skills I Can Teach</Label>
               <Input
-                id="canTeach"
-                name="canTeach"
+                id="skillsICanTeach"
+                name="skillsICanTeach"
                 placeholder="React, JavaScript, CSS (comma separated)"
-                value={formData.canTeach}
+                value={formData.skillsICanTeach}
                 onChange={handleChange}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="wantsToLearn">Skills I Want to Learn</Label>
+              <Label htmlFor="skillsIWantToLearn">Skills I Want to Learn</Label>
               <Input
-                id="wantsToLearn"
-                name="wantsToLearn"
+                id="skillsIWantToLearn"
+                name="skillsIWantToLearn"
                 placeholder="Python, Machine Learning (comma separated)"
-                value={formData.wantsToLearn}
+                value={formData.skillsIWantToLearn}
                 onChange={handleChange}
               />
             </div>

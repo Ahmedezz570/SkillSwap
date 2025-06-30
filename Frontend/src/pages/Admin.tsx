@@ -51,7 +51,7 @@
 
       fetchUsers();
     }, []);
-    if (!currentUser?.isAdmin) {
+    if (currentUser?.user.role !== "admin") {
       return <Navigate to="/dashboard" replace />;
     }
 const handleDeleteUser = async (userId: string, userName: string) => {

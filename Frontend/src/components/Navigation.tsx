@@ -1,5 +1,5 @@
 
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation,useNavigate } from 'react-router-dom';
 import { useApp } from '@/contexts/AppContext';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -21,7 +21,7 @@ const Navigation = () => {
   const { isLoggedIn, currentUser, logout } = useApp();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
+const navigate = useNavigate();
   const isActive = (path: string) => location.pathname === path;
 
   // Navigation items for regular users
@@ -38,7 +38,13 @@ const Navigation = () => {
     { path: '/dashboard', label: 'Dashboard' },
   ];
 
-  const navItems = currentUser?.isAdmin ? adminNavItems : regularNavItems;
+  const out = () => {
+    logout(); 
+    navigate('/'); 
+  };
+
+  const navItems = currentUser?.user?.role === "admin" ? adminNavItems : regularNavItems;
+
 
   const NavItems = ({ mobile = false, onItemClick = () => {} }) => (
     <div className={mobile ? "flex flex-col space-y-4" : "hidden md:flex space-x-6"}>
@@ -65,9 +71,13 @@ const Navigation = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <Link to="/" className="text-2xl font-bold gradient-bg bg-clip-text text-transparent">
+              {/* <Link to="/" className="text-2xl font-bold gradient-bg bg-clip-text text-transparent">
                 SkillSwap
-              </Link>
+              </Link> */}
+               <Link to="/">
+             <img src="/SkillSwap.svg" alt="SkillSwap Logo" style={{ height: '50px', width: '100px' }} />
+</Link>
+
             </div>
             <div className="flex items-center space-x-4">
               <Link to="/login">
@@ -88,9 +98,13 @@ const Navigation = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center space-x-8">
-            <Link to="/" className="text-2xl font-bold gradient-bg bg-clip-text text-transparent">
+            {/* <Link to="/" className="text-2xl font-bold gradient-bg bg-clip-text text-transparent">
               SkillSwap
-            </Link>
+            </Link> */}
+          <Link to="/">
+             <img src="/SkillSwap.svg" alt="SkillSwap Logo" style={{ height: '50px', width: '100px' }} />
+           </Link>
+
             <NavItems />
           </div>
           
@@ -107,13 +121,13 @@ const Navigation = () => {
                   <div className="flex flex-col space-y-6 mt-6">
                     <div className="flex items-center space-x-4">
                       <Avatar className="h-12 w-12">
-                        <AvatarImage src={currentUser?.avatar} alt={currentUser?.name} />
-                        <AvatarFallback>{currentUser?.name?.charAt(0)}</AvatarFallback>
+                        <AvatarImage src={currentUser?.user.avatar} alt={currentUser?.user.fullName} />
+                        <AvatarFallback>{currentUser?.user.fullName?.charAt(0)}</AvatarFallback>
                       </Avatar>
                       <div>
-                        <p className="font-medium">{currentUser?.name}</p>
+                        <p className="font-medium">{currentUser?.user.fullName}</p>
                         <p className="text-sm text-muted-foreground">
-                          {currentUser?.isAdmin ? 'Administrator' : 'Member'}
+                          {currentUser?.user.role =="admin" ? 'Administrator' : 'Member'}
                         </p>
                       </div>
                     </div>
@@ -132,7 +146,7 @@ const Navigation = () => {
                       </Link>
                       <button
                         onClick={() => {
-                          logout();
+                         out();
                           setMobileMenuOpen(false);
                         }}
                         className="block w-full text-left px-3 py-2 text-sm text-gray-700 hover:text-primary"
@@ -151,8 +165,8 @@ const Navigation = () => {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={currentUser?.avatar} alt={currentUser?.name} />
-                      <AvatarFallback>{currentUser?.name?.charAt(0)}</AvatarFallback>
+                      <AvatarImage src={currentUser?.user.avatar} alt={currentUser?.user.fullName} />
+                      <AvatarFallback>{currentUser?.user.fullName?.charAt(0)}</AvatarFallback>
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
@@ -160,7 +174,7 @@ const Navigation = () => {
                   <DropdownMenuItem asChild>
                     <Link to="/profile">Edit Profile</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={logout}>
+                  <DropdownMenuItem onClick={out}>
                     Log out
                   </DropdownMenuItem>
                 </DropdownMenuContent>

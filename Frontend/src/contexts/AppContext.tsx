@@ -1,16 +1,20 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-
+import { Link, Navigate } from 'react-router-dom';
 interface User {
+  user :{
+   role: string;
   id: string;
-  name: string;
+  fullName: string;
   email: string;
   avatar: string;
   bio: string;
-  canTeach: string[];
-  wantsToLearn: string[];
+  skillsICanTeach: string[];
+  skillsIWantToLearn: string[];
   rating: number;
   sessionsCompleted: number;
   isAdmin?: boolean;
+  }
+  
 }
 
 interface Message {
@@ -51,64 +55,64 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-const mockUsers: User[] = [
-  {
-    id: '1',
-    name: 'Alice Johnson',
-    email: 'alice@example.com',
-    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
-    bio: 'Passionate web developer with 5+ years of experience. Love teaching and learning new technologies!',
-    canTeach: ['React', 'JavaScript', 'CSS', 'HTML'],
-    wantsToLearn: ['Python', 'Machine Learning', 'AWS'],
-    rating: 4.8,
-    sessionsCompleted: 24,
-    isAdmin: true
-  },
-  {
-    id: '2',
-    name: 'Bob Smith',
-    email: 'bob@example.com',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
-    bio: 'Data scientist and Python enthusiast. Always excited to share knowledge and learn from others.',
-    canTeach: ['Python', 'Machine Learning', 'Data Analysis'],
-    wantsToLearn: ['React', 'Node.js', 'GraphQL'],
-    rating: 4.9,
-    sessionsCompleted: 18
-  },
-  {
-    id: '3',
-    name: 'Carol Davis',
-    email: 'carol@example.com',
-    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
-    bio: 'UX/UI designer with a passion for creating beautiful and functional user experiences.',
-    canTeach: ['UI/UX Design', 'Figma', 'Adobe Creative Suite'],
-    wantsToLearn: ['Frontend Development', 'CSS Animations'],
-    rating: 4.7,
-    sessionsCompleted: 15
-  },
-  {
-    id: '4',
-    name: 'David Wilson',
-    email: 'david@example.com',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-    bio: 'Full-stack developer and DevOps engineer. Love automating processes and teaching best practices.',
-    canTeach: ['Node.js', 'AWS', 'Docker', 'DevOps'],
-    wantsToLearn: ['Kubernetes', 'Terraform'],
-    rating: 4.6,
-    sessionsCompleted: 12
-  },
-  {
-    id: '5',
-    name: 'Eva Martinez',
-    email: 'eva@example.com',
-    avatar: 'https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=150&h=150&fit=crop&crop=face',
-    bio: 'Mobile app developer specializing in React Native and Flutter. Passionate about creating cross-platform solutions.',
-    canTeach: ['React Native', 'Flutter', 'Mobile Development'],
-    wantsToLearn: ['Swift', 'Kotlin'],
-    rating: 4.5,
-    sessionsCompleted: 9
-  }
-];
+// const mockUsers: User[] = [
+//   {
+//     id: '1',
+//     name: 'Alice Johnson',
+//     email: 'alice@example.com',
+//     avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
+//     bio: 'Passionate web developer with 5+ years of experience. Love teaching and learning new technologies!',
+//     canTeach: ['React', 'JavaScript', 'CSS', 'HTML'],
+//     wantsToLearn: ['Python', 'Machine Learning', 'AWS'],
+//     rating: 4.8,
+//     sessionsCompleted: 24,
+//     isAdmin: true
+//   },
+//   {
+//     id: '2',
+//     name: 'Bob Smith',
+//     email: 'bob@example.com',
+//     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+//     bio: 'Data scientist and Python enthusiast. Always excited to share knowledge and learn from others.',
+//     canTeach: ['Python', 'Machine Learning', 'Data Analysis'],
+//     wantsToLearn: ['React', 'Node.js', 'GraphQL'],
+//     rating: 4.9,
+//     sessionsCompleted: 18
+//   },
+//   {
+//     id: '3',
+//     name: 'Carol Davis',
+//     email: 'carol@example.com',
+//     avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
+//     bio: 'UX/UI designer with a passion for creating beautiful and functional user experiences.',
+//     canTeach: ['UI/UX Design', 'Figma', 'Adobe Creative Suite'],
+//     wantsToLearn: ['Frontend Development', 'CSS Animations'],
+//     rating: 4.7,
+//     sessionsCompleted: 15
+//   },
+//   {
+//     id: '4',
+//     name: 'David Wilson',
+//     email: 'david@example.com',
+//     avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+//     bio: 'Full-stack developer and DevOps engineer. Love automating processes and teaching best practices.',
+//     canTeach: ['Node.js', 'AWS', 'Docker', 'DevOps'],
+//     wantsToLearn: ['Kubernetes', 'Terraform'],
+//     rating: 4.6,
+//     sessionsCompleted: 12
+//   },
+//   {
+//     id: '5',
+//     name: 'Eva Martinez',
+//     email: 'eva@example.com',
+//     avatar: 'https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=150&h=150&fit=crop&crop=face',
+//     bio: 'Mobile app developer specializing in React Native and Flutter. Passionate about creating cross-platform solutions.',
+//     canTeach: ['React Native', 'Flutter', 'Mobile Development'],
+//     wantsToLearn: ['Swift', 'Kotlin'],
+//     rating: 4.5,
+//     sessionsCompleted: 9
+//   }
+// ];
 
 const mockMessages: Message[] = [
   {
@@ -140,7 +144,9 @@ const mockMessages: Message[] = [
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [users, setUsers] = useState<User[]>(mockUsers);
+
+  const [users, setUsers] = useState<User[]>([]);
+
   const [messages, setMessages] = useState<Message[]>(mockMessages);
   const [bookings, setBookings] = useState<Booking[]>([]);
 
@@ -156,55 +162,79 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     }
   }, []);
 
-  const login = (email: string, password: string): boolean => {
-    const user = users.find(u => u.email === email);
-    if (user) {
-      setCurrentUser(user);
-      setIsLoggedIn(true);
-      
-      // Save to localStorage
-      localStorage.setItem('skillswap_user', JSON.stringify(user));
-      localStorage.setItem('skillswap_auth', 'true');
-      
-      return true;
-    }
+ const login = async (email: string, password: string): Promise<boolean> => {
+  try {
+    const res = await fetch('http://localhost:2000/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email, password })
+    });
+
+    if (!res.ok) return false;
+
+    const user: User = await res.json();
+console.log("user",user)
+    setCurrentUser(user);
+    console.log("user",user)
+    setIsLoggedIn(true);
+
+    localStorage.setItem('skillswap_user', JSON.stringify(user));
+    localStorage.setItem('skillswap_auth', 'true');
+
+    return true;
+
+  } catch (err) {
+    console.error('Login error:', err);
     return false;
-  };
+  }
+};
+
 
   const logout = () => {
     setCurrentUser(null);
     setIsLoggedIn(false);
     
+    // <Navigate to="/" replace />;
     // Clear localStorage
     localStorage.removeItem('skillswap_user');
     localStorage.removeItem('skillswap_auth');
   };
 
-  const signup = (userData: Partial<User>): boolean => {
-    if (!userData.email || !userData.name) return false;
-    
-    const newUser: User = {
-      id: (users.length + 1).toString(),
-      name: userData.name,
-      email: userData.email,
-      avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face',
-      bio: userData.bio || '',
-      canTeach: userData.canTeach || [],
-      wantsToLearn: userData.wantsToLearn || [],
-      rating: 0,
-      sessionsCompleted: 0
-    };
-    
-    setUsers([...users, newUser]);
+  const signup = async (userData: Partial<User>): Promise<boolean> => {
+  if (!userData.email || !userData.fullName) 
+    return false;
+
+  try {
+    const res = await fetch('http://localhost:2000/api/auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(userData)
+    });
+
+    if (!res.ok) 
+      return false;
+
+    const newUser: User = await res.json();
+
+    setUsers(prev => [...prev, newUser]);
     setCurrentUser(newUser);
     setIsLoggedIn(true);
-    
-    // Save to localStorage
-    localStorage.setItem('skillswap_user', JSON.stringify(newUser));
-    localStorage.setItem('skillswap_auth', 'true');
-    
+
+    // localStorage.setItem('skillswap_user', JSON.stringify(newUser));
+    // localStorage.setItem('skillswap_auth', 'true');
+
     return true;
-  };
+
+  } catch (error) {
+    console.error('Signup failed:', error);
+    return false;
+  }
+};
+
 
   const sendMessage = (receiverId: string, content: string) => {
     if (!currentUser) return;
@@ -215,7 +245,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       receiverId,
       content,
       timestamp: new Date(),
-      senderName: currentUser.name
+      senderName: currentUser.fullName
     };
     
     setMessages([...messages, newMessage]);

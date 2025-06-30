@@ -56,7 +56,12 @@ const loginUser = async (req, res) => {
                 fullName: user.fullName,
                 email: user.email,
                 role: user.role,
-                createdAt: user.createdAt
+                createdAt: user.createdAt,
+                skillsICanTeach: user.skillsICanTeach,
+                skillsIWantToLearn: user.skillsIWantToLearn,
+                bio: user.bio,
+                
+
             }
         });
     } catch (error) {

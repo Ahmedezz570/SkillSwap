@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useApp } from '@/contexts/AppContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,25 +11,27 @@ import { User, Save } from 'lucide-react';
 
 const Profile = () => {
   const { currentUser, updateUserProfile } = useApp();
-  const [formData, setFormData] = useState({
-    name: currentUser?.name || '',
-    bio: currentUser?.bio || '',
-    canTeach: currentUser?.canTeach.join(', ') || '',
-    wantsToLearn: currentUser?.wantsToLearn.join(', ') || ''
-  });
   const { toast } = useToast();
 
   if (!currentUser) return null;
 
+  const [formData, setFormData] = useState({
+    name: currentUser.user.fullName || '',
+    bio: currentUser.user.bio || '',
+    canTeach: currentUser.user.skillsICanTeach?.join(', ') || '',
+    wantsToLearn: currentUser.user.skillsIWantToLearn?.join(', ') || ''
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const updatedData = {
-      ...formData,
-      canTeach: formData.canTeach.split(',').map(skill => skill.trim()).filter(Boolean),
-      wantsToLearn: formData.wantsToLearn.split(',').map(skill => skill.trim()).filter(Boolean)
+      fullName: formData.name,
+      bio: formData.bio,
+      skillsICanTeach: formData.canTeach.split(',').map(skill => skill.trim()).filter(Boolean),
+      skillsIWantToLearn: formData.wantsToLearn.split(',').map(skill => skill.trim()).filter(Boolean)
     };
-    
+
     updateUserProfile(updatedData);
     toast({
       title: "Profile updated!",
@@ -53,31 +54,30 @@ const Profile = () => {
       </div>
 
       <div className="space-y-6">
+        {/* Profile Card */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
               <User className="h-5 w-5 mr-2" />
               Profile Information
             </CardTitle>
-            <CardDescription>
-              Your basic information and bio
-            </CardDescription>
+            <CardDescription>Your basic information and bio</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex items-center space-x-6 mb-6">
               <Avatar className="h-20 w-20">
-                <AvatarImage src={currentUser.avatar} />
-                <AvatarFallback className="text-lg">{currentUser.name.charAt(0)}</AvatarFallback>
+                <AvatarImage src={currentUser.user.avatar || ""} />
+                <AvatarFallback className="text-lg">{currentUser.user.fullName.charAt(0)}</AvatarFallback>
               </Avatar>
               <div>
-                <h3 className="font-semibold text-lg">{currentUser.name}</h3>
-                <p className="text-gray-600">{currentUser.email}</p>
+                <h3 className="font-semibold text-lg">{currentUser.user.fullName}</h3>
+                <p className="text-gray-600">{currentUser.user.email}</p>
                 <div className="flex items-center space-x-4 mt-2">
                   <span className="text-sm">
-                    ⭐ {currentUser.rating.toFixed(1)} rating
+                    ⭐ {(currentUser.user.rating || 23).toFixed(1)} rating
                   </span>
                   <span className="text-sm">
-                    📚 {currentUser.sessionsCompleted} sessions completed
+                    📚 {currentUser.user.sessionsCompleted || 23} sessions completed
                   </span>
                 </div>
               </div>
@@ -85,12 +85,11 @@ const Profile = () => {
           </CardContent>
         </Card>
 
+        {/* Form Card */}
         <Card>
           <CardHeader>
             <CardTitle>Update Information</CardTitle>
-            <CardDescription>
-              Modify your profile details and skills
-            </CardDescription>
+            <CardDescription>Modify your profile details and skills</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -129,7 +128,7 @@ const Profile = () => {
                     rows={3}
                   />
                   <p className="text-sm text-gray-500">
-                    Current: {currentUser.canTeach.length} skill{currentUser.canTeach.length !== 1 ? 's' : ''}
+                    Current: {currentUser?.user.skillsICanTeach.length} skill{currentUser?.user.skillsICanTeach.length !== 1 ? 's' : ''}
                   </p>
                 </div>
 
@@ -144,7 +143,7 @@ const Profile = () => {
                     rows={3}
                   />
                   <p className="text-sm text-gray-500">
-                    Current: {currentUser.wantsToLearn.length} skill{currentUser.wantsToLearn.length !== 1 ? 's' : ''}
+                    Current: {currentUser?.user.skillsIWantToLearn.length} skill{currentUser?.user.skillsIWantToLearn.length !== 1 ? 's' : ''}
                   </p>
                 </div>
               </div>

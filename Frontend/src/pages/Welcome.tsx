@@ -24,7 +24,7 @@ const Welcome = () => {
                 </Button>
               </Link>
               <Link to="/login">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary">
+                <Button size="lg" variant="secondary" className="bg-white text-primary hover:bg-gray-100">
                   Sign In
                 </Button>
               </Link>

@@ -20,6 +20,7 @@ const Login = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // console.log("Login attempt with email:", email, "and password:", password);
     const success = login(email, password);
     if (success) {
       toast({
@@ -82,11 +83,11 @@ const Login = () => {
               </Link>
             </p>
           </div>
-          <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+          {/* <div className="mt-4 p-3 bg-gray-50 rounded-lg">
             <p className="text-xs text-gray-600 text-center">
               Demo: Use any email from the user list (alice@example.com, bob@example.com, etc.)
             </p>
-          </div>
+          </div> */}
         </CardContent>
       </Card>
     </div>

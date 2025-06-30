@@ -9,11 +9,13 @@ import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
   const { currentUser } = useApp();
+  console.log("currentUser", currentUser);
+  console.log("currentUser.user", currentUser?.user);
+  if (!currentUser) 
+    return null;
+ 
 
-  if (!currentUser) return null;
-
-  // Admin Dashboard
-  if (currentUser.isAdmin) {
+  if (currentUser.user.role =='admin') {
     return (
       <div className="min-h-screen bg-gray-50 p-6">
         <div className="max-w-7xl mx-auto">
@@ -129,15 +131,15 @@ const Dashboard = () => {
           <CardContent className="p-6">
             <div className="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-6">
               <Avatar className="h-24 w-24">
-                <AvatarImage src={currentUser.avatar} alt={currentUser.name} />
-                <AvatarFallback className="text-2xl">{currentUser.name.charAt(0)}</AvatarFallback>
+                <AvatarImage src={currentUser.user.avatar || "AA"} alt={currentUser.user.fullName} />
+                <AvatarFallback className="text-2xl">{currentUser.user.fullName.charAt(0)}</AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <h1 className="text-2xl font-bold text-gray-900">{currentUser.name}</h1>
-                <p className="text-gray-600 mt-1">{currentUser.bio}</p>
+                <h1 className="text-2xl font-bold text-gray-900">{currentUser.user.fullName}</h1>
+                <p className="text-gray-600 mt-1">{currentUser.user.bio}</p>
                 <div className="flex items-center mt-2">
                   <Star className="h-4 w-4 text-yellow-400 mr-1" />
-                  <span className="text-sm text-gray-600">{currentUser.rating} rating</span>
+                  <span className="text-sm text-gray-600">{currentUser.user.rating || 23} rating</span>
                 </div>
               </div>
               <Link to="/profile">
@@ -158,7 +160,7 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="flex flex-wrap gap-2">
-                {currentUser.canTeach.map((skill, index) => (
+                {currentUser.user.skillsICanTeach.map((skill, index) => (
                   <Badge key={index} variant="secondary" className="skill-badge">
                     {skill}
                   </Badge>
@@ -180,7 +182,7 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="flex flex-wrap gap-2">
-                {currentUser.wantsToLearn.map((skill, index) => (
+                {currentUser.user.skillsIWantToLearn.map((skill, index) => (
                   <Badge key={index} variant="outline">
                     {skill}
                   </Badge>
